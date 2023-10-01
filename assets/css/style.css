@@ -22,15 +22,25 @@ header {
   margin: 0 0 10px 0;
   padding: 30px;
   border-bottom: solid 4px var(--secondary-color);
+
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 15px;
+}
+
+#slash {
+  height: 50px;
+  width: 4px;
+  background-color: white;
+  rotate: 8deg;
 }
 
 main {
   background-color: var(--dark-overlay);
   border-radius: var(--corner-radius);
   max-width: 7in;
+  min-height: 2in;
   margin: auto;
   padding: 15px;
   box-shadow: inset 0 0 15px var(--darker-overlay);

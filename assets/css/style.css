@@ -1,0 +1,43 @@
+:root {
+  --dark-overlay: rgba(0, 0, 0, 0.1);
+  --darker-overlay: rgba(0, 0, 0, 0.3);
+  --corner-radius: 10px;
+  --secondary-color: #0093fc;
+}
+
+* {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+html, body {
+  background-color: #828282;
+  color : white;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+header {
+  background-color: var(--darker-overlay);
+  margin: 0 0 10px 0;
+  padding: 30px;
+  border-bottom: solid 4px var(--secondary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+main {
+  background-color: var(--dark-overlay);
+  border-radius: var(--corner-radius);
+  max-width: 7in;
+  margin: auto;
+  padding: 15px;
+  box-shadow: inset 0 0 15px var(--darker-overlay);
+}
+
+@media screen and (max-width: 734px) {
+  main {
+    margin: 0 15px 0 15px;
+  }
+} 

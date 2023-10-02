@@ -14,8 +14,9 @@
       <div id="slash"></div>
       <h3>By elmfer</h3>
     </header>
+
     <main>
-      <div id="welcome-screen" style="text-align: center;">
+      <div id="welcome-screen" style="text-align: center;" hidden>
         <h2>Welcome to the Coding Quiz!</h2>
         <hr>
         <p style="text-align: left;">
@@ -25,6 +26,19 @@
           left. Ready?
         </p>
         <button id="start">Start</button>
+      </div>
+
+      <div id="done-screen" style="text-align: center;">
+        <h2>Time's Up!</h2>
+        <hr>
+        <p>
+          Your final score: <span id="final-score"></span>
+        </p>
+
+        <div class="field">
+          <input type="text" placeholder="Initials or Name">
+          <button>Submit</button>
+        </div>
       </div>
     </main>
   </body>

@@ -97,6 +97,19 @@ const scoreboardManager = {
 
     scoreboardList.push({name: name, score: score});
     scoreboardList.sort((a, b) => b.score - a.score);
+    scoreboardList = scoreboardList.filter((entry, index, arr) => {
+      var nextEntry = arr[index + 1];
+
+      if(!nextEntry) return true;
+
+      var key = `${entry.name}-${entry.score}`;
+      var nextKey = `${nextEntry.name}-${nextEntry.score}`;
+
+      if(key === nextKey) return false;
+
+      return true;
+    });
+
     if(scoreboardList.length > MAX_NUM_SCORES) scoreboardList.length = MAX_NUM_SCORES;
 
     localStorage.setItem('scoreboard', JSON.stringify(scoreboardList));

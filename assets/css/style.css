@@ -89,6 +89,20 @@ button, input {
   margin-bottom: 12px;
 }
 
+table {
+  width: 100%;
+  background-color: var(--dark-overlay);
+  margin-bottom: 15px;
+}
+
+tr:nth-child(even) {
+  background-color: var(--dark-overlay);
+}
+
+tr:first-child {
+  font-size: 20px;
+}
+
 @media screen and (max-width: 734px) {
   main {
     margin: 0 15px 0 15px;

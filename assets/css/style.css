@@ -103,6 +103,27 @@ tr:first-child {
   font-size: 20px;
 }
 
+#quiz-screen {
+  text-align: left;
+}
+
+#quiz-screen button {
+  width: 100%;
+}
+
+#status, #current-score {
+  font-size: 12px;
+  clear: both;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+#status span {
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
 @media screen and (max-width: 734px) {
   main {
     margin: 0 15px 0 15px;

@@ -2,15 +2,42 @@ const quizContext = {
   questionNumber: 0,
   currentScore: 0,
   currentQuestion: questions[0],
+  timeLeftSeconds: 0,
+  timerInterval: null,
+  previousMillis: 0,
   startQuiz: function() {
     this.questionNumber = 1;
     this.currentScore = 0;
+    this.timeLeftSeconds = 30;
 
     quizScreen.renderQuestion(this.currentQuestion);
+    this.startTimer();
     setScreen('quiz');
   },
   endQuiz: function() {
     setScreen('done');
+  },
+  startTimer: function() {
+    if(this.timerInterval) clearInterval(this.timerInterval);
+
+    this.previousMillis = Date.now();
+    this.timerInterval = setInterval(function() {
+      const millisNow = Date.now();
+      const millisElapsed = millisNow - quizContext.previousMillis;
+
+      quizContext.timeLeftSeconds -= millisElapsed / 1000;
+
+      if(quizContext.timeLeftSeconds < 0) {
+        quizContext.endQuiz();
+        clearInterval(quizContext.timerInterval);
+        quizScreen.renderTimeLeft(0);
+        return;
+      }
+
+      quizScreen.renderTimeLeft(quizContext.timeLeftSeconds);
+
+      quizContext.previousMillis = millisNow;
+    }, 100);
   }
 }
 
@@ -42,6 +69,13 @@ const quizScreen = {
       choiceBtn.textContent = question.choices[i];
       this.choicesElm.appendChild(choiceBtn);
     }
+  },
+
+  renderTimeLeft: function(timeLeftSeconds) {
+    const minutes = Math.floor(timeLeftSeconds / 60);
+    const seconds = Math.floor(timeLeftSeconds % 60);
+
+    this.timeLeftElm.textContent = minutes + ':' + String(seconds).padStart(2, '0');
   }
 }
 

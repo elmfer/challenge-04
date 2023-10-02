@@ -24,15 +24,20 @@ const quizContext = {
   },
   answeredWrong: function() {
     quizScreen.renderResult(false);
-    this.timeLeftSeconds -= 5;
+    this.timeLeftSeconds -= 10;
 
     setTimeout(() => { quizContext.nextQuestion(); }, 500);
   },
   endQuiz: function() {
+    doneScreen.renderScore(this.currentScore);
     setScreen('done');
+    clearInterval(quizContext.timerInterval);
   },
   nextQuestion: function() {
+    if(this.timeLeftSeconds <= 0) return;
+
     if(this.questionNumber == questions.length) {
+      doneScreen.renderMessage("All Done!");
       this.endQuiz();
       return;
     } 
@@ -53,8 +58,8 @@ const quizContext = {
       quizContext.timeLeftSeconds -= millisElapsed / 1000;
 
       if(quizContext.timeLeftSeconds < 0) {
+        doneScreen.renderMessage("Time's Up!");
         quizContext.endQuiz();
-        clearInterval(quizContext.timerInterval);
         quizScreen.renderTimeLeft(0);
         return;
       }
@@ -140,7 +145,28 @@ const doneScreen = {
   element: document.getElementById('done-screen'),
   finalScoreElm: document.getElementById('final-score'),
   submitBtn: document.getElementById('submit'),
-  nameInputBtn: document.getElementById('name-input')
+  nameInputBtn: document.getElementById('name-input'),
+  messageElm: document.getElementById('done-message'),
+  nameWarnElm: document.getElementById('name-warn'),
+
+  init: function() {
+    this.submitBtn.onclick = function() {
+      if(doneScreen.nameInputBtn.value === "") {
+        doneScreen.nameWarnElm.style.display = 'block';
+      } else {
+        doneScreen.nameWarnElm.style.display = "none";
+        setScreen('scoreboard');
+      }
+    };
+  },
+
+  renderMessage: function(message) {
+    this.messageElm.textContent = message;
+  },
+
+  renderScore: function(score) {
+    this.finalScoreElm.textContent = score;
+  }
 }
 
 const scoreboardScreen = {
@@ -162,6 +188,7 @@ function setScreen(screen) {
 
 function init() {
   welcomeScreen.init();
+  doneScreen.init();
   setScreen('welcome');
 }
 

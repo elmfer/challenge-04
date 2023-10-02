@@ -47,7 +47,7 @@
       </div>
 
       <div id="done-screen" class="screen" hidden>
-        <h2>Time's Up!</h2>
+        <h2 id="done-message"></h2>
         <hr>
         <p>
           Your final score: <span id="final-score"></span>
@@ -57,6 +57,10 @@
           <input id="name-input" type="text" placeholder="Initials or Name">
           <button id="submit">Submit</button>
         </div>
+
+        <p id="name-warn" style="color: palevioletred; font-size: 12px; display: none;">
+          Please enter something!
+        </p>
       </div>
 
       <div id="scoreboard-screen" class="screen" hidden>

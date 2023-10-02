@@ -5,6 +5,7 @@ const quizContext = {
   timeLeftSeconds: 0,
   timerInterval: null,
   previousMillis: 0,
+  ignoreAnswers: false,
   startQuiz: function() {
     this.questionNumber = 1;
     this.currentScore = 0;
@@ -16,17 +17,23 @@ const quizContext = {
     setScreen('quiz');
   },
   answeredRight: function() {
+    if(this.ignoreAnswers) return;
+    this.ignoreAnswers = true;
+
     quizScreen.renderResult(true);
     this.currentScore += 5;
     quizScreen.renderScore(this.currentScore);
 
-    setTimeout(() => { quizContext.nextQuestion(); }, 500);
+    setTimeout(() => { this.ignoreAnswers = false; quizContext.nextQuestion(); }, 500);
   },
   answeredWrong: function() {
+    if(this.ignoreAnswers) return;
+    this.ignoreAnswers = true;
+
     quizScreen.renderResult(false);
     this.timeLeftSeconds -= 10;
 
-    setTimeout(() => { quizContext.nextQuestion(); }, 500);
+    setTimeout(() => { this.ignoreAnswers = false; quizContext.nextQuestion(); }, 500);
   },
   endQuiz: function() {
     doneScreen.renderScore(this.currentScore);
@@ -173,7 +180,13 @@ const scoreboardScreen = {
   element: document.getElementById('scoreboard-screen'),
   newGameBtn: document.getElementById('new-game'),
   clearScoresBtn: document.getElementById('clear-scores'),
-  scoreboardElm: document.getElementById('scoreboard')
+  scoreboardElm: document.getElementById('scoreboard'),
+
+  init: function() {
+    this.newGameBtn.onclick = function() {
+      setScreen('welcome');
+    };
+  }
 }
 
 function setScreen(screen) {
@@ -189,6 +202,7 @@ function setScreen(screen) {
 function init() {
   welcomeScreen.init();
   doneScreen.init();
+  scoreboardScreen.init();
   setScreen('welcome');
 }
 

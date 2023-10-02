@@ -11,11 +11,36 @@ const quizContext = {
     this.timeLeftSeconds = 30;
 
     quizScreen.renderQuestion(this.currentQuestion);
+    quizScreen.renderScore(this.currentScore);
     this.startTimer();
     setScreen('quiz');
   },
+  answeredRight: function() {
+    quizScreen.renderResult(true);
+    this.currentScore += 5;
+    quizScreen.renderScore(this.currentScore);
+
+    setTimeout(() => { quizContext.nextQuestion(); }, 500);
+  },
+  answeredWrong: function() {
+    quizScreen.renderResult(false);
+    this.timeLeftSeconds -= 5;
+
+    setTimeout(() => { quizContext.nextQuestion(); }, 500);
+  },
   endQuiz: function() {
     setScreen('done');
+  },
+  nextQuestion: function() {
+    if(this.questionNumber == questions.length) {
+      this.endQuiz();
+      return;
+    } 
+
+    this.questionNumber++;
+
+    this.currentQuestion = questions[this.questionNumber - 1];
+    quizScreen.renderQuestion(this.currentQuestion);
   },
   startTimer: function() {
     if(this.timerInterval) clearInterval(this.timerInterval);
@@ -52,7 +77,7 @@ const welcomeScreen = {
 const quizScreen = {
   element: document.getElementById('quiz-screen'),
   questionNumberElm: document.getElementById('question-number'),
-  answeredCorrectlyElm: document.getElementById('answered-correctly'),
+  resultElm: document.getElementById('result'),
   timeLeftElm: document.getElementById('time-left'),
   scoreElm: document.getElementById('score'),
   questionElm: document.getElementById('question'),
@@ -67,6 +92,22 @@ const quizScreen = {
       var choiceBtn = document.createElement('button');
       choiceBtn.id = 'choice-' + i;
       choiceBtn.textContent = question.choices[i];
+      if(question.answer === i) {
+        choiceBtn.onclick = function(event) {
+          var button = event.target;
+          button.style.color = 'lightgreen';
+          button.style.paddingLeft = '10px';
+          quizContext.answeredRight();
+        };
+      } else {
+        choiceBtn.onclick = function(event) {
+          var button = event.target;
+          button.style.color = 'palevioletred';
+          button.style.paddingLeft = '10px';
+          quizContext.answeredWrong();
+        }
+      }
+
       this.choicesElm.appendChild(choiceBtn);
     }
   },
@@ -76,6 +117,22 @@ const quizScreen = {
     const seconds = Math.floor(timeLeftSeconds % 60);
 
     this.timeLeftElm.textContent = minutes + ':' + String(seconds).padStart(2, '0');
+  },
+
+  renderScore: function(score) {
+    this.scoreElm.textContent = score;
+  },
+
+  renderResult: function(isCorrect) {
+    this.resultElm.style.transition = '0s';
+    this.resultElm.style.color = isCorrect ? 'lightgreen' : 'palevioletred';
+    this.resultElm.style.opacity = '100%';
+    this.resultElm.textContent = isCorrect ? "Correct!" : "Wrong!";
+
+    setTimeout(function() {
+      quizScreen.resultElm.style.transition = '2s';
+      quizScreen.resultElm.style.opacity = '0%';
+    }, 1000);
   }
 }
 

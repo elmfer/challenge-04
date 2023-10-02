@@ -8,11 +8,13 @@ const quizContext = {
   timerInterval: null,
   previousMillis: 0,
   ignoreAnswers: false,
+  questionTime: 0,
   startQuiz: function() {
     this.questionNumber = 1;
     this.currentScore = 0;
     this.timeLeftSeconds = 30;
     this.currentQuestion = questions[0];
+    this.questionTime = Date.now();
 
     quizScreen.renderQuestion(this.currentQuestion);
     quizScreen.renderScore(this.currentScore);
@@ -23,9 +25,11 @@ const quizContext = {
     if(this.ignoreAnswers) return;
     this.ignoreAnswers = true;
 
+    const secondsElapsedOnQuestion = (Date.now() - this.questionTime) / 1000;
+    this.currentScore += 20 / (0.45 * secondsElapsedOnQuestion + 1);
+    
+    quizScreen.renderScore(Math.floor(this.currentScore));
     quizScreen.renderResult(true);
-    this.currentScore += 5;
-    quizScreen.renderScore(this.currentScore);
 
     setTimeout(() => { this.ignoreAnswers = false; quizContext.nextQuestion(); }, 500);
   },
@@ -39,7 +43,7 @@ const quizContext = {
     setTimeout(() => { this.ignoreAnswers = false; quizContext.nextQuestion(); }, 500);
   },
   endQuiz: function() {
-    doneScreen.renderScore(this.currentScore);
+    doneScreen.renderScore(Math.floor(this.currentScore));
     setScreen('done');
     clearInterval(quizContext.timerInterval);
   },
@@ -53,6 +57,7 @@ const quizContext = {
     } 
 
     this.questionNumber++;
+    this.questionTime = Date.now();
 
     this.currentQuestion = questions[this.questionNumber - 1];
     quizScreen.renderQuestion(this.currentQuestion);
@@ -202,7 +207,7 @@ const doneScreen = {
       }
       
       doneScreen.nameWarnElm.style.display = "none";
-      scoreboardManager.addScore(doneScreen.nameInputBtn.value, quizContext.currentScore);
+      scoreboardManager.addScore(doneScreen.nameInputBtn.value, Math.floor(quizContext.currentScore));
       scoreboardScreen.renderScores(scoreboardManager.getScores());
       setScreen('scoreboard');
     };

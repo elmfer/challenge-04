@@ -1,3 +1,5 @@
+const MAX_NUM_SCORES = 20;
+
 const quizContext = {
   questionNumber: 0,
   currentScore: 0,
@@ -10,6 +12,7 @@ const quizContext = {
     this.questionNumber = 1;
     this.currentScore = 0;
     this.timeLeftSeconds = 30;
+    this.currentQuestion = questions[0];
 
     quizScreen.renderQuestion(this.currentQuestion);
     quizScreen.renderScore(this.currentScore);
@@ -76,7 +79,29 @@ const quizContext = {
       quizContext.previousMillis = millisNow;
     }, 100);
   }
-}
+};
+
+const scoreboardManager = {
+  getScores: function() {
+    var scoreboardList = localStorage.getItem('scoreboard');
+
+    if(!scoreboardList) return [];
+
+    return JSON.parse(scoreboardList);
+  },
+  clearScores: function() {
+    localStorage.setItem('scoreboard', '[]');
+  },
+  addScore: function(name, score) {
+    var scoreboardList = this.getScores();
+
+    scoreboardList.push({name: name, score: score});
+    scoreboardList.sort((a, b) => b.score - a.score);
+    if(scoreboardList.length > MAX_NUM_SCORES) scoreboardList.length = MAX_NUM_SCORES;
+
+    localStorage.setItem('scoreboard', JSON.stringify(scoreboardList));
+  }
+};
 
 const welcomeScreen = {
   element: document.getElementById('welcome-screen'),
@@ -160,10 +185,13 @@ const doneScreen = {
     this.submitBtn.onclick = function() {
       if(doneScreen.nameInputBtn.value === "") {
         doneScreen.nameWarnElm.style.display = 'block';
-      } else {
-        doneScreen.nameWarnElm.style.display = "none";
-        setScreen('scoreboard');
+        return;
       }
+      
+      doneScreen.nameWarnElm.style.display = "none";
+      scoreboardManager.addScore(doneScreen.nameInputBtn.value, quizContext.currentScore);
+      scoreboardScreen.renderScores(scoreboardManager.getScores());
+      setScreen('scoreboard');
     };
   },
 
@@ -186,6 +214,29 @@ const scoreboardScreen = {
     this.newGameBtn.onclick = function() {
       setScreen('welcome');
     };
+    this.clearScoresBtn.onclick = function() {
+      scoreboardManager.clearScores();
+      scoreboardScreen.renderScores([]);
+    }
+  },
+
+  renderScores: function(scores) {
+    while(this.scoreboardElm.children.length > 1) {
+      this.scoreboardElm.children[1].remove();
+    }
+
+    for(var i = 0; i < scores.length; i++) {
+      var row = document.createElement('tr');
+      var nameTd = document.createElement('td');
+      var scoreTd = document.createElement('td');
+      nameTd.textContent = scores[i].name;
+      scoreTd.textContent = scores[i].score;
+
+      row.appendChild(nameTd);
+      row.appendChild(scoreTd);
+
+      this.scoreboardElm.appendChild(row);
+    }
   }
 }
 

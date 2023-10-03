@@ -13,6 +13,8 @@ const quizContext = {
     this.questionNumber = 1;
     this.currentScore = 0;
     this.timeLeftSeconds = 30;
+
+    randomizeQuestions();
     this.currentQuestion = questions[0];
     this.questionTime = Date.now();
 

@@ -19,6 +19,7 @@
     </header>
 
     <main>
+      <!--The Welcome screen-->
       <div id="welcome-screen" class="screen">
         <h2>Welcome to the Coding Quiz!</h2>
         <hr>
@@ -32,6 +33,7 @@
         <button id="start">Start</button>
       </div>
 
+      <!--The Quiz Screen. Where the questions are rendered.-->
       <div id="quiz-screen" class="screen" hidden>
         <h2 id="question"></h2>
         <hr>
@@ -47,6 +49,7 @@
         <span id="current-score">Current Score <span id="score">100</span></span>
       </div>
 
+      <!--The Done Screen. Shown after time's up or players anwered all questions.-->
       <div id="done-screen" class="screen" hidden>
         <h2 id="done-message"></h2>
         <hr>
@@ -59,11 +62,13 @@
           <button id="submit">Submit</button>
         </div>
 
+        <!--Warns user to enter a name before submitting. Shown if player submitted an empty name.-->
         <p id="name-warn" style="color: palevioletred; font-size: 12px; display: none;">
           Please enter something!
         </p>
       </div>
 
+      <!--The Scoreboard Screen.-->
       <div id="scoreboard-screen" class="screen" hidden>
         <h2>Scoreboard</h2>
         <hr>

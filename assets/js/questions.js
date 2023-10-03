@@ -85,16 +85,19 @@ var questions = [
   }
 ]
 
+// Generate random integer in range 0...max
 function randInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+// Randomize the order of choices of a question
 function randomizeChoices(question) {
   var tempChoices = [...question.choices];
   var answer = question.choices[question.answer];
 
   question.choices.length = 0;
 
+  // Randomly sort the choices list
   while(tempChoices.length > 0) {
     const randIndex = randInt(tempChoices.length);
 
@@ -103,18 +106,22 @@ function randomizeChoices(question) {
     tempChoices.splice(randIndex, 1);
   }
 
+  // Set the new index of the correct anwser
   question.answer = question.choices.indexOf(answer);
 }
 
+// Randomize the order of the questions
 function randomizeQuestions() {
   var tempQuestions = [...questions];
 
   questions.length = 0;
 
+  // Scramble the questions list
   while(tempQuestions.length > 0) {
     const randIndex = randInt(tempQuestions.length);
     var question = tempQuestions[randIndex];
 
+    // Scramble choices (if permitted)
     if(question.randomizeChoices === undefined || question.randomizeChoices)
       randomizeChoices(question);
 

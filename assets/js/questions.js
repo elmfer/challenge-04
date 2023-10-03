@@ -52,7 +52,8 @@ var questions = [
       "Both of the above",
       "Delete the element from the DOM"
     ],
-    answer: 2
+    answer: 2,
+    randomizeChoices: false
   },
   {
     question: "What selector do you use to grab an element with an id of \'message\'?",
@@ -88,6 +89,23 @@ function randInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+function randomizeChoices(question) {
+  var tempChoices = [...question.choices];
+  var answer = question.choices[question.answer];
+
+  question.choices.length = 0;
+
+  while(tempChoices.length > 0) {
+    const randIndex = randInt(tempChoices.length);
+
+    question.choices.push(tempChoices[randIndex]);
+
+    tempChoices.splice(randIndex, 1);
+  }
+
+  question.answer = question.choices.indexOf(answer);
+}
+
 function randomizeQuestions() {
   var tempQuestions = [...questions];
 
@@ -95,7 +113,12 @@ function randomizeQuestions() {
 
   while(tempQuestions.length > 0) {
     const randIndex = randInt(tempQuestions.length);
-    questions.push(tempQuestions[randIndex]);
+    var question = tempQuestions[randIndex];
+
+    if(question.randomizeChoices === undefined || question.randomizeChoices)
+      randomizeChoices(question);
+
+    questions.push(question);
 
     tempQuestions.splice(randIndex, 1);
   }
